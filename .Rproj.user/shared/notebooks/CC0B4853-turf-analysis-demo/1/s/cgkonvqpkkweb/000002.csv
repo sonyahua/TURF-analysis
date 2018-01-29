@@ -1,0 +1,20 @@
+"0","install.packages(""turfR"")"
+"2","Installing package into ‘C:/Users/sonya/Documents/R/win-library/3.4’
+(as ‘lib’ is unspecified)
+"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.4/turfR_0.8-7.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 36751 bytes (35 KB)
+"
+"2","downloaded 35 KB
+
+"
+"1","package â€˜turfRâ€™ successfully unpacked and MD5 sums checked
+"
+"1","
+"
+"1","The downloaded binary packages are in
+	C:\Users\sonya\AppData\Local\Temp\Rtmp6lXYYK\downloaded_packages"
+"1","
+"

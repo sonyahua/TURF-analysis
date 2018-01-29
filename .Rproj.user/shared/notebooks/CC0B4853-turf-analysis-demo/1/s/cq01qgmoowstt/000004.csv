@@ -1,0 +1,57 @@
+"0","# the data come from the bayesm package
+install.packages(""bayesm"")
+"
+"2","Installing package into ‘C:/Users/sonya/Documents/R/win-library/3.4’
+(as ‘lib’ is unspecified)
+"
+"2","also installing the dependency ‘RcppArmadillo’
+
+"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.4/RcppArmadillo_0.8.300.1.0.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 2190746 bytes (2.1 MB)
+"
+"2","downloaded 2.1 MB
+
+"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.4/bayesm_3.1-0.1.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 4247344 bytes (4.1 MB)
+"
+"2","downloaded 4.1 MB
+
+"
+"1","package â€˜RcppArmadilloâ€™ successfully unpacked and MD5 sums checked
+"
+"1","package â€˜bayesmâ€™ successfully unpacked and MD5 sums checked
+"
+"1","
+"
+"1","The downloaded binary packages are in
+	C:\Users\sonya\AppData\Local\Temp\Rtmp6lXYYK\downloaded_packages"
+"1","
+"
+"0","# the data come from the bayesm package"
+"0","install.packages(""bayesm"")"
+"2","Installing package into ‘C:/Users/sonya/Documents/R/win-library/3.4’
+(as ‘lib’ is unspecified)
+"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.4/bayesm_3.1-0.1.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 4247344 bytes (4.1 MB)
+"
+"2","downloaded 4.1 MB
+
+"
+"1","package â€˜bayesmâ€™ successfully unpacked and MD5 sums checked
+"
+"1","
+"
+"1","The downloaded binary packages are in
+	C:\Users\sonya\AppData\Local\Temp\Rtmp6lXYYK\downloaded_packages"
+"1","
+"
+"0","library(bayesm)"

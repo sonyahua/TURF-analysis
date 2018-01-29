@@ -1,0 +1,129 @@
+---
+title: "turf-analysis-demo"
+author: "Sonya Hua"
+date: "January 28, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#install.packages("turfR")
+library(turfR)
+```
+
+### TURF Algorithm
+
+n is the number of items to be included in the TURF algorithm (ncol(data)-1). 
+
+k is a vector length 1:n containing any values 1 to n indicating the combination sizes to be evaluated by the TURF algorithm. 
+
+Monte Carlo simulated combination sets, when requested, are generated using the procedure described by Adler, et al. (2010). Sets of n choose k that result in small numbers of combinations should be run without the Monte Carlo simulation option since they require little processing time (e.g., 12 choose 7 = 792 combinations and will run in less than 1 second). Typically, even larger sets will run in a reasonable amount of time without subsetting (e.g., 18 choose 10 = 43,758 combinations and will run in less than a minute on most computers), but RAM may become a limiting factor, especially when large numbers of individuals are combined with problems involving large numbers of items. The default for substituting Monte Carlo simulated subsets of combinations is set at 10,000. For the above reasons, and because subsetting can lead to duplicate combinations especially when the original set is small, care should be taken to not subset combinations until the original set becomes unmanageably large.
+
+The lack of looping in the algorithm permits processing at about 1,000 combinations per second.
+
+
+
+```{r}
+data(turf_ex_data)
+head(turf_ex_data)
+
+
+```
+The R function `choose(30,5)` indicates that there are 142,506 possible combinations of 30 things in sets of 5)
+
+```{r}
+choose(10,3)  # 120 possible combinations for 10 elements and 3 slots
+choose(25,8)  # 1,081,575 possible combinations for 25 elements and 8 slots
+choose(25,10) # 3,268,760 possible combinations for 25 elements and 10 slots
+```
+
+### What is the optimal combination of 3 flavors?
+
+```{r}
+ex1 <- turf(turf_ex_data, 10, 3)
+ex1
+```
+*Obs:* Combo 120, 119, and 99 is the first 3 best triplets from the 120 possible combinations of 3 that can be formed from 10 flavors based on reach and frequency. 
+
+There are also lots of equally good combinations of flavors where the drop in reach is really due to random variation (i.e. 99.9% to 99.6%)
+
+The **rchX ** columns tells the weighted proportion of the 180 individuals in the dataset that would buy one of the 10 products listed in the columns labeled with integers from 1 to 10 i.e. 99.9% of respondents would buy something if flavors 8, 9, and 10 were offered. 
+
+
+### What is the optimal combination of 8 flavors?
+
+```{r}
+ex5 <- turf(turf_ex_data, 10, 5)
+head(ex5)
+```
+*Obs:* Combo 120, 119, and 99 is the first 3 best triplets from the 120 possible combinations of 3 that can be formed from 10 flavors. 
+
+The **rchX ** columns tells the weighted proportion of the 180 individuals in the dataset that would buy one of the 10 products listed in the columns labeled with integers from 1 to 10 i.e. 99.9% of respondents would buy something if flavors 8, 9, and 10 were offered. 
+
+
+
+### Approach 2: XLSTAT
+
+Test data contains purchase intention ratings (1 to 5) for 27 items from 185 respondents.
+A TURF analysis would require that we set a cutoff score to transform the 1 through 5 ratings into a 0/1 binary measure. 
+
+Below maintains the 5-point scale and treat purchase intent as an intensity score after subtracting one so that the scale now ranges from 0=not at all to 4=quite sure. 
+```{r}
+test<-read.csv("demoTurf.csv")
+
+#install.packages("NMF")
+library(NMF)
+fit<-nmf(test[,-1]-1, 8, method="lee", nrun=20)
+coefmap(fit)
+```
+
+The **nonnegative matrix factorization (NMF)** reveals that the 27 items in the columns fall into 8 separable row categories marked by the red indicating a high probability of membership and yellow with values close to zero showing the categories where the product does not belong. The above heatmap displays the coefficients for each of the 27 products, as the original Excel file names them.
+
+NMF: https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf
+
+It's called non-negative because it returns features and weights with no negative values. All features are positive or 0. Find two non-negative matrices (W, H) whose product approximates the non- negative matrix X. This factorization can be used for example for dimensionality reduction, source separation or topic extraction.
+
+It's apparent interest has an underlying structure and that we should consider grouping the products based on shared features, benefits or usages. For example, what do Products 5, 6 and 17 clustered together at the end of this heatmap have in common? 
+
+Different product offerings are only needed when the market contains segments seeking different benefits. 
+
+Is there customer heterogeneity? If yes, does our optimal combination support product differentiation?  Different product offerings are only needed when the market contains segments seeking different benefits.A segmentation, whether NMF or another clustering procedure, would uncover a group interested in less typical flavors (probably many such flavors). 
+
+
+### Clustering using History of Whiskey Drinkers
+
+https://joelcadwell.blogspot.com/2014/08/customer-segmentation-using-purchase.html
+
+```{r}
+# the data come from the bayesm package
+#install.packages("bayesm")
+library(bayesm)
+head(data(Scotch))
+ 
+library(NMF)
+fit<-nmf(Scotch, 20, "lee", nrun=20)
+coefmap(fit)
+basismap(fit)
+ 
+fit<-nmf(Scotch, 5, "lee", nrun=20)
+basismap(fit)
+coefmap(fit)
+ 
+# code for sorting and printing
+# the two factor matrices
+h<-coef(fit)
+library(psych)
+fa.sort(t(round(h,3)))
+w<-basis(fit)
+wp<-w/apply(w,1,sum)
+head(fa.sort(round(wp,3)))
+ 
+# hard clustering
+type<-max.col(w)
+table(type)
+t(aggregate(Scotch, by=list(type), FUN=mean))
+```
+
